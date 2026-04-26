@@ -12,6 +12,12 @@ class Game:
         self.height = _height
         self.caption = _caption
 
+        #Have set amount of rows and columns
+        self.tile_cols = 10
+        self.tile_rows = 10
+        self.tile_width = self.width /self.tile_cols
+        self.tile_height = self.height / self.tile_rows
+
         self.clock = pygame.time.Clock()
         self.running = True
         self._setup_pygame()
@@ -37,10 +43,10 @@ class Game:
         self.display.fill(WHITE)
 
         #Draw Grid
-        #for col in range(self.tile_cols):
-            #for row in range(self.tile_rows):
-                #rect = (col * self.tile_width, row * self.tile_height, self.tile_width, self.tile_height)
-                #pygame.draw.rect(self.display, BLACK, rect, 1)
+        for col in range(self.tile_cols):
+            for row in range(self.tile_rows):
+                rect = (col * self.tile_width, row * self.tile_height, self.tile_width, self.tile_height)
+                pygame.draw.rect(self.display, BLACK, rect, 1)
 
             
         pygame.display.update()
