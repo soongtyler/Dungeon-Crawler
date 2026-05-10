@@ -83,7 +83,7 @@ class Game:
             if event.type == pygame.QUIT:
                 self.running = False
             if self.player:
-                moved = self.player.handle_input(event, self.tile_cols, self.tile_rows)
+                moved = self.player.handle_input(event,self.map, self.tile_cols, self.tile_rows)
 
     def _draw(self):
         self.display.fill(WHITE)
