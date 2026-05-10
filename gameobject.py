@@ -15,7 +15,7 @@ class GameObject(ABC):
 
         # grid tile dimensions
         self.tile_width = tile_width
-        self.tile_height = self.tile_height
+        self.tile_height = tile_height
 
         #color
         self.color = color
