@@ -3,6 +3,7 @@ from gameobject import *
 from wall import Wall
 
 GREEN  = (0, 255, 0)
+MOVE_FRAMES = 10
 
 class Player(GameObject):
     def __init__(self, gridx, gridy, tile_width, tile_height, color = GREEN):
@@ -10,6 +11,9 @@ class Player(GameObject):
         x = gridx * tile_width
         y = gridy * tile_height
         super().__init__(gridx, gridy, x, y, tile_width, tile_height, color)
+
+        ## Movement animation
+        self.move_speed = tile_width/MOVE_FRAMES ## how much distance to cover each frame
 
     def draw(self, surface):
         ## TODO: need to update
@@ -55,8 +59,25 @@ class Player(GameObject):
 
     def update(self):
         
-        pass
         
-        # update position
         self.x = self.gridx * self.tile_width
         self.y = self.gridy * self.tile_height
+         # set target x and y
+        target_x = self.gridx * self.tile_width
+        target_y = self.gridy * self.tile_height
+
+        #Check if we are before or after target x
+        if self.x < target_x:
+           self.x = min(self.x + self.move_speed, target_x)
+        elif self.x > target_x:
+           self.x = max(self.x - self.move_speed, target_x)
+        
+
+        # check if we are before or after target_y
+        if self.y < target_y:
+            self.y = min(self.y + self.move_speed, target_y)
+        elif self.y > target_y:
+            self.y = max(self.y - self.move_speed, target_y)
+
+        
+    
