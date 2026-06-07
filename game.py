@@ -78,18 +78,20 @@ class Game:
             # last row
             self.map[self.tile_rows - 1][row] = Wall(self.tile_cols - 1, row, self.tile_width, self.tile_height)
  
-        ### Random internal walls
+        ### create random internal walls
         for _ in range(num_internal_walls):
-            # Initial
+            # Initial randomization, avoid clashing with the border
             x = random.randint(1, self.tile_cols - 2)
             y = random.randint(1, self.tile_rows - 2)
 
-            ##if space
+            ## if space is not free
             while self.map[x][y] != 0:
                 x = random.randint(1, self.tile_cols - 2)
                 y = random.randint(1, self.tile_rows - 2)
 
-            self.map[x][y] = Wall(x,y, self.tile_width, self.tile_height)
+            self.map[x][y] = Wall(x, y, self.tile_width, self.tile_height)
+
+
 
         #Create random enemies with initial tile spawn on free tile
         for _ in range(num_enemies):

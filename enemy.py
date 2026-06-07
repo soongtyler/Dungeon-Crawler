@@ -1,11 +1,15 @@
+import os
 import pygame
 import random
 from gameobject import GameObject
+from spritesheet import *
+
 
 #Constants
 RED = (255,0,0)
 MOVE_FRAMES = 10
-
+# path to enemy sprite assesrs (relative to this file)
+ASSET_DIR = os.path.join(os.path.dirname(__file__), "assets", "3 Dude_Monster")
 class Enemy(GameObject):
     def __init__(self, gridx, gridy, tile_width, tile_height, color=RED):
         #Calculate the initial position manually using grid system tiles
@@ -15,9 +19,29 @@ class Enemy(GameObject):
 
         # Movement animation
         self.move_speed = tile_width / MOVE_FRAMES # How much distance to cover each frame
+
+        # Movement animation
+        self.move_speed = tile_width / MOVE_FRAMES # how much distance to cover each frame
+
+        ### Sprite animations
+        scale = (tile_width, tile_height)
+        self.animations = {
+            "idle": Animation(load_spritesheet(os.path.join(ASSET_DIR, "Dude_Monster_Idle_4.png"), 32, 32, scale), speed=8),
+            "walk": Animation(load_spritesheet(os.path.join(ASSET_DIR, "Dude_Monster_Walk_6.png"), 32, 32, scale), speed=max(1, MOVE_FRAMES // 6)),
+        }
+        self.current_animation = "idle"
+        self.direction = "right"
+        self.is_moving = False
+
     def draw(self, surface):
         # TODO: the enemy will start out as a rect but we will update this later on
-        pygame.draw.rect(surface, self.color, (self.x, self.y, self.tile_width, self.tile_height))
+        frame = self.animations[self.current_animation].get_frame()
+
+        #Flip Horizontally when facing left
+        if self.direction == "left":
+            frame = pygame.transform.flip(frame, True, False)
+
+        surface.blit(frame, (self.x, self.y))
 
 
     def update(self):
@@ -35,6 +59,21 @@ class Enemy(GameObject):
                 self.y = min(self.y + self.move_speed, target_y)
             elif self.y > target_y:
                 self.y = max(self.y - self.move_speed, target_y)
+
+            self.is_moving = (self.x != target_x or self.y != target_y)
+
+            if self.is_moving:
+                if self.current_animation != "walk":
+                    self.current_animation = "walk"
+                    self.animations["walk"].reset()
+                self.animations["walk"].tick()
+            else:
+                if self.current_animation != "idle":
+                    self.current_animation = "idle"
+                    self.animations["idle"].reset()
+                self.animations["idle"].tick()
+
+
 
 
     def take_turn(self, game_map, tile_cols, tile_rows):
